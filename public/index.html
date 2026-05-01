@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>zeezoo — web agents & apps</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --bg:      #F2F0F9;
+    --surface: #FFFFFF;
+    --ink:     #0E0B1A;
+    --muted:   #7A7490;
+    --purple:  #5B4FCF;
+    --orange:  #E8440A;
+    --rule:    rgba(91,79,207,0.12);
+    --card-dark: #0D0B14;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(242,240,249,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.1rem; font-weight: 400;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+  .nav-cta {
+    background: var(--purple); color: #fff;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 18px; border-radius: 7px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: #4a3fba; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 88px 56px 80px;
+    max-width: 1140px; margin: 0 auto;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(3rem, 6.5vw, 5.2rem);
+    line-height: 1.06; letter-spacing: -0.03em;
+    margin-bottom: 22px;
+  }
+  .hero h1 .purple { color: var(--purple); }
+  .hero-sub {
+    max-width: 44ch; font-size: 0.97rem;
+    color: var(--muted); line-height: 1.7; margin-bottom: 28px;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--purple);
+  }
+  .hero-tag::before { content:''; width:28px; height:1.5px; background:var(--purple); }
+
+  /* ── APPS ── */
+  .section-apps {
+    background: #ECEAF6;
+    padding: 80px 56px 96px;
+  }
+  .section-apps-inner { max-width: 1140px; margin: 0 auto; }
+  .apps-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 52px;
+  }
+  .apps-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em; color: var(--ink);
+  }
+  .apps-note {
+    max-width: 20ch; text-align: right;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); line-height: 1.6; padding-top: 6px;
+  }
+
+  /* staggered grid */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .app-card {
+    background: var(--surface);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 56px rgba(91,79,207,0.18);
+  }
+  .app-card:nth-child(2) { margin-top: 40px; }
+  .app-card:nth-child(4) { margin-top: -40px; }
+
+  /* dark image panel */
+  .app-img {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--card-dark);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Cosmic Horoscope: vortex */
+  .img-horoscope {
+    background:
+      radial-gradient(ellipse at 50% 50%,
+        rgba(255,255,255,0.95) 0%,
+        rgba(210,200,255,0.5) 6%,
+        rgba(130,110,210,0.2) 16%,
+        rgba(70,50,150,0.1) 28%,
+        rgba(30,20,80,0.06) 42%,
+        transparent 60%),
+      radial-gradient(ellipse at 50% 50%, #1c1230 0%, #0a0718 50%, #040310 100%);
+  }
+  .img-horoscope::after {
+    content:''; position:absolute;
+    width:70%; height:70%; border-radius:50%;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow:
+      0 0 0 10% rgba(255,255,255,0.035),
+      0 0 0 22% rgba(255,255,255,0.022),
+      0 0 0 36% rgba(255,255,255,0.014),
+      0 0 0 52% rgba(255,255,255,0.007);
+  }
+
+  /* Taco Stalker: dark + "SAFFE STALKER" title */
+  .img-taco {
+    background: #080808;
+    flex-direction: column; gap: 10px;
+  }
+  .img-taco::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(180,140,60,0.08) 0%, transparent 55%);
+  }
+  .taco-emoji { font-size: 72px; filter: grayscale(1) contrast(1.2); position:relative; z-index:1; }
+  .taco-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.28em;
+    text-transform: uppercase; color: rgba(255,255,255,0.8);
+    position: relative; z-index:1;
+  }
+
+  /* Diana's Truck: dark road */
+  .img-truck {
+    background: #080c12;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 10px; position: relative;
+  }
+  .img-truck::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(transparent 48%, rgba(249,115,22,0.04) 50%, transparent 52%),
+      linear-gradient(90deg, transparent 48%, rgba(255,255,255,0.02) 50%, transparent 52%),
+      radial-gradient(ellipse at 50% 80%, rgba(249,115,22,0.12) 0%, transparent 55%);
+  }
+  .img-truck::after {
+    content: '🚛';
+    font-size: 64px; position: relative; z-index: 1;
+    filter: drop-shadow(0 0 20px rgba(249,115,22,0.4));
+    animation: truck-idle 3s ease-in-out infinite;
+  }
+  @keyframes truck-idle {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-6px); }
+  }
+
+  .img-biz {
+    background: linear-gradient(135deg, #0f1f17 0%, #1a3328 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .img-biz::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 60% 40%, rgba(65,103,82,0.4) 0%, transparent 65%);
+  }
+  .biz-icon { font-size: 64px; position: relative; z-index: 1; filter: drop-shadow(0 4px 16px rgba(65,103,82,0.6)); }
+  .biz-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(65,200,120,0.7); position: relative; z-index: 1;
+  }
+
+  /* card text body — LIGHT */
+  .app-body {
+    padding: 20px 22px 24px;
+    background: var(--surface);
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .app-tag {
+    display: inline-block; width: fit-content;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px;
+    background: rgba(91,79,207,0.1);
+    color: var(--purple);
+    border: 1px solid rgba(91,79,207,0.2);
+  }
+  .app-tag.tag-app {
+    background: rgba(234,179,8,0.1);
+    color: #b47f1e; border-color: rgba(234,179,8,0.25);
+  }
+  .app-tag.tag-voice {
+    background: rgba(249,115,22,0.1);
+    color: #c2510a; border-color: rgba(249,115,22,0.25);
+  }
+  .app-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.45rem; font-weight: 400;
+    color: var(--ink); line-height: 1.2; letter-spacing: -0.01em;
+  }
+  .app-desc {
+    font-size: 0.87rem; color: var(--muted);
+    line-height: 1.65; max-width: 38ch;
+  }
+  .app-cta {
+    margin-top: 6px;
+    font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--purple);
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.2s;
+  }
+  .app-card:hover .app-cta { gap: 9px; }
+  .app-cta::after { content: '→'; }
+
+  /* ── LOWER ── */
+  .lower { max-width: 1140px; margin: 0 auto; padding: 0 56px; }
+
+  section.panel {
+    padding: 72px 0; border-top: 1px solid var(--rule);
+  }
+  .kicker {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+  }
+  .kicker::before { content:''; width:24px; height:1.5px; background:var(--purple); }
+
+  /* ── NOW ── */
+  .now-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+  }
+  .now-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    line-height: 1.1; letter-spacing: -0.02em; color: var(--ink);
+    margin-bottom: 0;
+  }
+  .now-text h2 .accent { color: var(--orange); }
+  .now-card {
+    background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 14px;
+    padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .now-card-head {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .now-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+    animation: pdot 2s ease infinite;
+  }
+  @keyframes pdot {
+    0%,100%{ box-shadow:0 0 0 3px rgba(34,197,94,0.2); }
+    50%    { box-shadow:0 0 0 6px rgba(34,197,94,0.08); }
+  }
+  .now-card-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.15rem;
+    color: var(--ink); line-height: 1.3;
+  }
+  .now-card-title em { color: var(--purple); font-style: italic; }
+  .now-card-body {
+    font-size: 0.88rem; color: var(--muted); line-height: 1.65;
+  }
+  .now-bar {
+    height: 4px; border-radius: 2px;
+    background: var(--rule);
+    overflow: hidden; margin-top: 4px;
+  }
+  .now-bar-fill {
+    height: 100%; width: 68%;
+    background: linear-gradient(90deg, var(--purple), #8b7cf8);
+    border-radius: 2px;
+  }
+  .now-card-date {
+    font-size: 10px; color: var(--muted); letter-spacing: 0.06em;
+  }
+
+  /* ── IDEAS ── */
+  .ideas-form-wrap {
+    max-width: 680px;
+  }
+  #ideaForm {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  #ideaForm h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    letter-spacing: -0.02em; color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .form-field {
+    width: 100%; padding: 14px 16px;
+    border: 1px solid rgba(91,79,207,0.18);
+    border-radius: 10px;
+    background: var(--surface); color: var(--ink);
+    font-family: 'Inter', sans-serif; font-size: 15px;
+  }
+  .form-field::placeholder { color: #b0abc8; }
+  .form-field:focus { outline: 2px solid var(--purple); outline-offset: 1px; border-color: transparent; }
+  textarea.form-field { min-height: 100px; resize: vertical; line-height: 1.55; }
+  .submit-btn {
+    width: 100%; padding: 16px;
+    background: var(--purple); color: #fff;
+    border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+  }
+  .submit-btn:hover { background: #4a3fba; transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+  .form-ok {
+    display: none; align-items: center; gap: 8px;
+    font-size: 12px; color: #22c55e;
+    padding: 10px 14px;
+    background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 10px;
+  }
+  #ideaForm.submitted .form-ok { display: inline-flex; }
+  #ideaForm.submitted .form-field,
+  #ideaForm.submitted .submit-btn { opacity: 0.5; pointer-events: none; }
+  .ideas-sent { margin-top: 10px; font-size: 11px; color: var(--muted); }
+  .ideas-sent b { color: var(--ink); }
+
+  /* ── FOOTER / CONNECT ── */
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 40px 56px 52px;
+    max-width: 1140px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 24px;
+  }
+  .footer-left h3 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: 1.6rem; color: var(--ink);
+    margin-bottom: 8px; letter-spacing: -0.01em;
+  }
+  .footer-tagline {
+    font-size: 11.5px; color: var(--muted);
+    margin-bottom: 16px; max-width: 36ch; line-height: 1.5;
+  }
+  .footer-socials {
+    display: flex; gap: 20px;
+  }
+  .footer-socials a {
+    font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); transition: color 0.2s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .footer-socials a:hover { color: var(--purple); }
+  .footer-nav {
+    display: flex; gap: 24px;
+  }
+  .footer-nav a {
+    font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); transition: color 0.2s;
+  }
+  .footer-nav a:hover { color: var(--ink); }
+  .footer-copy {
+    width: 100%; font-size: 10.5px; color: #c0bcd4;
+    padding-top: 24px; border-top: 1px solid var(--rule);
+    margin-top: 8px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  /* ── SERVICES / CHAT ── */
+  .section-services {
+    background: var(--surface);
+    padding: 80px 56px 96px;
+    border-top: 1px solid var(--rule);
+  }
+  .section-services-inner { max-width: 1140px; margin: 0 auto; }
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 48px;
+  }
+  .services-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.02em; color: var(--ink);
+  }
+  .services-note {
+    max-width: 20ch; text-align: right;
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); line-height: 1.6; padding-top: 6px;
+  }
+  /* Chat container */
+  .chat-shell {
+    background: #f4f3fb;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    overflow: hidden;
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex; flex-direction: column;
+    height: 620px;
+  }
+  .chat-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 22px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    flex-shrink: 0;
+  }
+  .chat-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chat-brand-mark {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(140deg, var(--purple) 0%, #8b7cf8 100%);
+    display: grid; place-items: center;
+    color: #fff; flex-shrink: 0;
+  }
+  .chat-brand-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 18px; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .chat-brand-sub { color: var(--muted); font-size: 13px; }
+  .chat-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border: 1px solid var(--rule);
+    border-radius: 999px; font-size: 11px; color: var(--muted);
+    white-space: nowrap;
+  }
+  .chat-pill-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.2); flex-shrink: 0;
+  }
+  .chat-topbar-right { display: flex; align-items: center; gap: 8px; }
+  .chat-icon-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--rule); background: var(--surface);
+    display: grid; place-items: center; color: var(--muted);
+    cursor: pointer; transition: background 0.15s; text-decoration: none;
+  }
+  .chat-icon-btn:hover { background: #f4f3fb; }
+  .chat-body {
+    flex: 1; overflow-y: auto; padding: 20px 22px 8px;
+    display: flex; flex-direction: column; gap: 16px;
+    scroll-behavior: smooth;
+  }
+  .chat-body::-webkit-scrollbar { width: 6px; }
+  .chat-body::-webkit-scrollbar-thumb { background: rgba(91,79,207,0.15); border-radius: 3px; }
+  /* Hero (empty state) */
+  .chat-hero {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: 32px 16px 16px; flex: 1;
+  }
+  .chat-hero-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--purple); margin-bottom: 10px;
+  }
+  .chat-hero h3 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: clamp(24px, 3.5vw, 34px); line-height: 1.1;
+    letter-spacing: -0.02em; margin: 0 0 10px; color: var(--ink);
+  }
+  .chat-hero p {
+    margin: 0; color: var(--muted); font-size: 14px; max-width: 480px;
+  }
+  .chat-quick-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center; margin-top: 18px;
+  }
+  .chat-quick {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 13px; background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 999px;
+    font-size: 13px; font-weight: 500; color: var(--ink);
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .chat-quick:hover { border-color: var(--purple); transform: translateY(-1px); }
+  .chat-quick.em { color: var(--orange); border-color: rgba(232,68,10,0.25); }
+  .chat-quick.em:hover { background: rgba(232,68,10,0.04); }
+  .chat-suggest {
+    display: grid; grid-template-columns: repeat(2,1fr); gap: 8px;
+    margin-top: 20px; width: 100%;
+  }
+  @media (max-width: 500px) { .chat-suggest { grid-template-columns: 1fr; } }
+  .chat-suggest-card {
+    text-align: left; padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 12px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .chat-suggest-card:hover { border-color: var(--purple); transform: translateY(-1px); }
+  .chat-suggest-icon {
+    width: 28px; height: 28px; flex: 0 0 28px; border-radius: 7px;
+    background: rgba(91,79,207,0.1); color: var(--purple);
+    display: grid; place-items: center;
+  }
+  .chat-suggest-text {
+    font-size: 13px; color: var(--ink); font-weight: 500; line-height: 1.3;
+  }
+  /* Messages */
+  .chat-msg-row { display: flex; gap: 10px; align-items: flex-start; animation: cfadein 0.3s ease both; }
+  .chat-msg-row.user { justify-content: flex-end; }
+  @keyframes cfadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  .chat-avatar {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: grid; place-items: center; flex: 0 0 28px;
+  }
+  .chat-avatar.ai {
+    background: linear-gradient(140deg, var(--purple) 0%, #8b7cf8 100%); color: #fff;
+  }
+  .chat-avatar.you {
+    background: #eceaf6; color: var(--muted);
+    font-weight: 700; font-size: 11px;
+  }
+  .chat-bubble-wrap { display: flex; flex-direction: column; max-width: 100%; }
+  .chat-bubble-wrap.user { align-items: flex-end; }
+  .chat-bubble {
+    max-width: 76%; padding: 10px 14px;
+    border-radius: 14px; font-size: 14px; line-height: 1.55;
+    white-space: pre-wrap; word-wrap: break-word;
+  }
+  .chat-bubble.ai {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-top-left-radius: 4px; color: var(--ink);
+  }
+  .chat-bubble.user {
+    background: var(--purple); color: #fff; border-top-right-radius: 4px;
+  }
+  .chat-copy-btn {
+    margin-top: 4px; font-size: 11px; color: var(--muted);
+    border: none; background: none; cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: color 0.15s;
+  }
+  .chat-copy-btn:hover { color: var(--ink); }
+  /* Typing dots */
+  .chat-typing { display: inline-flex; align-items: center; gap: 4px; padding: 12px 14px; }
+  .chat-typing span {
+    width: 6px; height: 6px; border-radius: 50%; background: #c0bcd4;
+    animation: cdot 1.2s infinite ease-in-out both;
+  }
+  .chat-typing span:nth-child(1) { animation-delay: -0.32s; }
+  .chat-typing span:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes cdot { 0%,80%,100%{transform:scale(0.6);opacity:.5} 40%{transform:scale(1);opacity:1} }
+  /* Error */
+  .chat-err {
+    align-self: center; font-size: 12px;
+    background: rgba(232,68,10,0.07); border: 1px solid rgba(232,68,10,0.2);
+    color: var(--orange); padding: 7px 12px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  /* Composer */
+  .chat-composer-wrap {
+    padding: 10px 16px 16px; flex-shrink: 0;
+    background: linear-gradient(to top, #f4f3fb 70%, transparent);
+  }
+  .chat-composer {
+    display: flex; align-items: flex-end; gap: 8px;
+    padding: 8px 8px 8px 14px;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 16px; box-shadow: 0 2px 8px rgba(91,79,207,0.06);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .chat-composer:focus-within {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(91,79,207,0.1), 0 2px 8px rgba(91,79,207,0.06);
+  }
+  .chat-composer textarea {
+    flex: 1; border: none; outline: none; background: transparent;
+    resize: none; padding: 8px 0; font-family: 'Inter', sans-serif;
+    font-size: 14px; line-height: 1.5; color: var(--ink);
+    max-height: 160px; min-height: 22px;
+  }
+  .chat-composer textarea::placeholder { color: #b0abc8; }
+  .chat-send-btn {
+    width: 36px; height: 36px; border-radius: 10px; border: none;
+    background: var(--purple); color: #fff;
+    display: grid; place-items: center; cursor: pointer; flex: 0 0 36px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .chat-send-btn:hover:not(:disabled) { background: #4a3fba; transform: translateY(-1px); }
+  .chat-send-btn:disabled { background: var(--rule); color: #b0abc8; cursor: not-allowed; }
+  .chat-hint {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: #c0bcd4; padding: 6px 2px 0;
+  }
+  .chat-hint kbd {
+    display: inline-block; padding: 1px 5px;
+    border: 1px solid var(--rule); border-bottom-width: 2px;
+    border-radius: 3px; font-size: 10px; font-family: ui-monospace, monospace;
+    background: var(--surface); color: var(--muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 780px) {
+    nav, .hero, .section-apps, .section-services, .lower, .site-footer { padding-left: 22px; padding-right: 22px; }
+    .nav-links { display: none; }
+    .apps-grid { grid-template-columns: 1fr; }
+    .app-card:nth-child(2) { margin-top: 0; }
+    .app-card:nth-child(4) { margin-top: 0; }
+    .chat-shell { height: 560px; }
+    .services-header { flex-direction: column; gap: 8px; }
+    .services-note { text-align: left; }
+    .now-layout { grid-template-columns: 1fr; gap: 28px; }
+    .footer-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">ZeeZoo</span>
+  <ul class="nav-links">
+    <li><a href="#apps" class="active">Apps</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#now">Now</a></li>
+    <li><a href="#ideas">Ideas</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+  <a href="mailto:simonjoshi@gmail.com" class="nav-cta">Build with me</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>
+    <span class="purple">Hi, I'm Zeezoo.</span><br>
+    I build web agents &amp;<br>
+    apps.
+  </h1>
+  <p class="hero-sub">Crafting autonomous systems that bridge the gap between complex logic and seamless user experiences. Based in the digital ether.</p>
+  <span class="hero-tag">Exploring the future of automation</span>
+</div>
+
+<!-- APPS -->
+<div class="section-apps" id="apps">
+  <div class="section-apps-inner">
+    <div class="apps-header">
+      <h2>Things you can try</h2>
+      <p class="apps-note">Selected works focused on agentic interfaces and niche utility</p>
+    </div>
+
+    <div class="apps-grid">
+
+      <a class="app-card" href="https://cosmic-horoscope.onrender.com" target="_blank" rel="noopener">
+        <div class="app-img img-horoscope"></div>
+        <div class="app-body">
+          <span class="app-tag">Web Agent</span>
+          <div class="app-name">Cosmic Horoscope</div>
+          <p class="app-desc">An AI voice agent that reads your personalized daily horoscope. Pick your sign, listen — Celeste speaks directly to you.</p>
+          <span class="app-cta">Launch prototype</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://taco-stalker-2864.onrender.com" target="_blank" rel="noopener">
+        <div class="app-img img-taco">
+          <span class="taco-emoji">🌮</span>
+          <span class="taco-label">Taco Stalker</span>
+        </div>
+        <div class="app-body">
+          <span class="app-tag tag-app">App</span>
+          <div class="app-name">Taco Stalker</div>
+          <p class="app-desc">A hyper-local tracking engine for taco restaurants using geospatial search. Minimalist utility for the hungry.</p>
+          <span class="app-cta">View case study</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://dianas-truck.onrender.com" target="_blank" rel="noopener">
+        <div class="app-img img-truck"></div>
+        <div class="app-body">
+          <span class="app-tag tag-voice">Voice Agent</span>
+          <div class="app-name">Diana's Truck</div>
+          <p class="app-desc">A voice AI that calls truck businesses on your behalf to check freight availability — instantly, 24/7, no hold music.</p>
+          <span class="app-cta">Try the agent</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://zezoo-biz.onrender.com" target="_blank" rel="noopener">
+        <div class="app-img img-biz">
+          <span class="biz-icon">🏢</span>
+          <span class="biz-label">ZeeZoo-Biz</span>
+        </div>
+        <div class="app-body">
+          <span class="app-tag tag-app">App</span>
+          <div class="app-name">ZeeZoo-Biz</div>
+          <p class="app-desc">Search real businesses for sale across BizBuySell, LoopNet, and more. Live marketplace data, one clean interface.</p>
+          <span class="app-cta">Find a business</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="section-services" id="services">
+  <div class="section-services-inner">
+    <div class="services-header">
+      <h2>Zeezoo Plumbing</h2>
+      <p class="services-note">AI chat assistant — available 24/7</p>
+    </div>
+    <div id="chat-root"></div>
+  </div>
+</div>
+
+<!-- LOWER SECTIONS -->
+<div class="lower">
+
+  <!-- NOW -->
+  <section class="panel" id="now">
+    <div class="kicker">02 — Now</div>
+    <div class="now-layout">
+      <div class="now-text">
+        <h2>Building autonomous<br>agents that actually<br><span class="accent">get things done.</span></h2>
+      </div>
+      <div class="now-card">
+        <div class="now-card-head"><span class="now-dot"></span> Current status</div>
+        <div class="now-card-title">Developing a <em>middleware layer</em> between intent and execution.</div>
+        <p class="now-card-body">Wiring together LLM reasoning, tool calls, and fallback logic into a single reliable pipeline. Target: an agent that succeeds on 85% of real-world tasks without human intervention.</p>
+        <div class="now-bar"><div class="now-bar-fill"></div></div>
+        <div class="now-card-date">April 2026 · In progress</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IDEAS -->
+  <section class="panel" id="ideas">
+    <div class="kicker">03 — Ideas</div>
+    <div class="ideas-form-wrap">
+      <form id="ideaForm">
+        <h2>Tell me what I should build next</h2>
+        <textarea class="form-field" id="ideaText" placeholder="Your specific problem or bold idea" required></textarea>
+        <input class="form-field" type="email" id="ideaEmail" placeholder="your@address.com">
+        <button class="submit-btn" type="submit">Submit proposal</button>
+        <div class="form-ok" id="ideaOk">✓ Got it — thanks for the idea.</div>
+      </form>
+      <div class="ideas-sent" id="ideasSent"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER / CONNECT -->
+<footer>
+  <div class="site-footer" id="connect">
+    <div class="footer-left">
+      <h3>Let's say hi</h3>
+      <p class="footer-tagline">Open to collaborations, wild ideas, and the occasional taco recommendation.</p>
+      <div class="footer-socials">
+        <a href="mailto:simonjoshi@gmail.com">↗ Email</a>
+        <a href="https://github.com/simonjoshi" target="_blank" rel="noopener">↗ GitHub</a>
+        <a href="https://linkedin.com/in/simonjoshi" target="_blank" rel="noopener">↗ LinkedIn</a>
+      </div>
+    </div>
+    <nav class="footer-nav">
+      <a href="#">Home</a>
+      <a href="#apps">Apps</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#connect">Contact</a>
+    </nav>
+    <div class="footer-copy">
+      <span>© 2026 zeezoo · All rights reserved</span>
+      <span>Made with care on the open web.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Vapi proxy client -->
+<script>
+async function vapiSend({ input, previousChatId }) {
+  const body = { input };
+  if (previousChatId) body.previousChatId = previousChatId;
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || data.error || `Error ${res.status}`);
+  return { chatId: data.chatId, reply: data.reply };
+}
+</script>
+
+<!-- Zeezoo Plumbing chat widget -->
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback, useMemo } = React;
+
+const PROMPTS = [
+  "My kitchen sink is draining slowly",
+  "How much does drain cleaning cost?",
+  "Book a service visit for tomorrow",
+  "Water heater making a banging noise",
+];
+const PHONE = "(415) 555-0101";
+
+const Svg = ({ d, d2, rect, size = 16, s = 1.75 }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+       stroke="currentColor" strokeWidth={s} strokeLinecap="round" strokeLinejoin="round">
+    {rect && <rect {...rect} />}
+    {d  && <path d={d} />}
+    {d2 && <path d={d2} />}
+  </svg>
+);
+
+const IDroplet  = (p) => <Svg {...p} d="M10 2.5c2 3 5 5.5 5 8.5a5 5 0 01-10 0c0-3 3-5.5 5-8.5z" />;
+const ICalendar = (p) => <Svg {...p} rect={{ x:3,y:4,width:14,height:13,rx:2 }} d="M3 8h14M7 2v4M13 2v4" />;
+const IReceipt  = (p) => <Svg {...p} d="M5 2h10v16l-2.5-1.5L10 18l-2.5-1.5L5 18V2z" d2="M8 7h4M8 10h4M8 13h2" />;
+const IPhone    = (p) => <Svg {...p} d="M4 3h3l1.5 4-2 1c1 2.5 2.5 4 5 5l1-2 4 1.5v3a1 1 0 01-1 1A13 13 0 013 4a1 1 0 011-1z" />;
+const ISparkle  = (p) => <Svg {...p} d="M10 3l1.5 4.5L16 9l-4.5 1.5L10 15l-1.5-4.5L4 9l4.5-1.5z" />;
+const IArrow    = (p) => <Svg {...p} s={2.25} d="M10 16V4" d2="M5 9l5-5 5 5" />;
+const IRefresh  = (p) => <Svg {...p} d="M3 10a7 7 0 0112-5l2 2M17 4v3h-3" d2="M17 10a7 7 0 01-12 5l-2-2M3 16v-3h3" />;
+const IShield   = (p) => <Svg {...p} d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5l7-3z" d2="M7 10l2 2 4-4" />;
+const ICheck    = (p) => <Svg {...p} d="M3.5 10.5l4 4 9-9" />;
+const ICopy     = (p) => <Svg {...p} rect={{ x:6,y:6,width:11,height:11,rx:2 }} d="M3 13V4a1 1 0 011-1h9" />;
+const IAlert    = (p) => <Svg {...p} d="M10 2L1.5 17h17L10 2z" d2="M10 8v4M10 15v.5" />;
+const IFlame    = (p) => <Svg {...p} d="M10 2c1 3-3 4-3 8a3 3 0 006 0c0-2-1-3-1-5 2 1 3 3 3 5a5 5 0 01-10 0c0-4 4-5 5-8z" />;
+
+const ICONS = [IDroplet, IReceipt, ICalendar, IFlame];
+
+function ZeeChat() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput]       = useState("");
+  const [busy, setBusy]         = useState(false);
+  const [chatId, setChatId]     = useState(null);
+  const [error, setError]       = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+  const bodyRef  = useRef(null);
+  const taRef    = useRef(null);
+  const empty    = messages.length === 0;
+
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+  }, [messages, busy]);
+
+  useEffect(() => {
+    const el = taRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(160, el.scrollHeight) + "px";
+  }, [input]);
+
+  const send = useCallback(async (text) => {
+    const trimmed = (text ?? input).trim();
+    if (!trimmed || busy) return;
+    setError(null);
+    setInput("");
+    setMessages(m => [...m, { id: `u-${Date.now()}`, role: "user", content: trimmed }]);
+    setBusy(true);
+    try {
+      const { chatId: id, reply } = await vapiSend({ input: trimmed, previousChatId: chatId });
+      setChatId(id);
+      setMessages(m => [...m, { id: `a-${Date.now()}`, role: "assistant", content: reply }]);
+    } catch(e) {
+      setError(e.message || String(e));
+      setMessages(m => [...m, {
+        id: `err-${Date.now()}`, role: "assistant",
+        content: `I couldn't connect right now. Please try again or call ${PHONE}.`
+      }]);
+    } finally { setBusy(false); }
+  }, [input, busy, chatId]);
+
+  const copy = async (id, text) => {
+    try { await navigator.clipboard.writeText(text); setCopiedId(id); setTimeout(() => setCopiedId(c => c===id?null:c), 1400); } catch {}
+  };
+
+  const reset = () => { setMessages([]); setChatId(null); setError(null); };
+
+  const onKey = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!busy && input.trim()) send(); }
+  };
+
+  return (
+    <div className="chat-shell">
+      {/* Topbar */}
+      <div className="chat-topbar">
+        <div className="chat-brand">
+          <div className="chat-brand-mark"><IDroplet size={17} /></div>
+          <span>
+            <span className="chat-brand-name">Zeezoo</span>
+            <span className="chat-brand-sub"> · Plumbing</span>
+          </span>
+        </div>
+        <div className="chat-topbar-right">
+          <span className="chat-pill"><span className="chat-pill-dot"></span> Live · &lt;1 min</span>
+          <a className="chat-icon-btn" href={`tel:${PHONE.replace(/[^\d+]/g,"")}`} title={`Call ${PHONE}`}>
+            <IPhone size={15} />
+          </a>
+          {!empty && (
+            <button className="chat-icon-btn" onClick={reset} title="New chat"><IRefresh size={15} /></button>
+          )}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="chat-body" ref={bodyRef}>
+        {empty ? (
+          <div className="chat-hero">
+            <div className="chat-hero-eyebrow">Zeezoo Plumbing Assistant</div>
+            <h3>Plumbing help, on tap.</h3>
+            <p>Ask about a clog, a leak, pricing, or book a visit — we typically reply in under a minute.</p>
+            <div className="chat-quick-row">
+              <button className="chat-quick" onClick={() => send("I'd like to book a service visit.")}>
+                <ICalendar size={14} /> Book a visit
+              </button>
+              <button className="chat-quick" onClick={() => send("Can I get a quote for a service?")}>
+                <IReceipt size={14} /> Get a quote
+              </button>
+              <a className="chat-quick em" href={`tel:${PHONE.replace(/[^\d+]/g,"")}`}>
+                <IAlert size={14} /> Emergency · {PHONE}
+              </a>
+            </div>
+            <div className="chat-suggest">
+              {PROMPTS.map((p, i) => {
+                const I = ICONS[i % ICONS.length];
+                return (
+                  <button key={i} className="chat-suggest-card" onClick={() => send(p)}>
+                    <span className="chat-suggest-icon"><I size={15} /></span>
+                    <span className="chat-suggest-text">{p}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <>
+            {messages.map(m => {
+              const isUser = m.role === "user";
+              return (
+                <div key={m.id} className={`chat-msg-row ${isUser?"user":"assistant"}`}>
+                  {!isUser && <div className="chat-avatar ai"><ISparkle size={14} /></div>}
+                  <div className={`chat-bubble-wrap ${isUser?"user":""}`}>
+                    <div className={`chat-bubble ${isUser?"user":"ai"}`}>{m.content}</div>
+                    {!isUser && m.content && (
+                      <button className="chat-copy-btn" onClick={() => copy(m.id, m.content)}>
+                        {copiedId === m.id ? <><ICheck size={11} /> Copied</> : <><ICopy size={11} /> Copy</>}
+                      </button>
+                    )}
+                  </div>
+                  {isUser && <div className="chat-avatar you">You</div>}
+                </div>
+              );
+            })}
+            {busy && (
+              <div className="chat-msg-row assistant">
+                <div className="chat-avatar ai"><ISparkle size={14} /></div>
+                <div className="chat-bubble ai" style={{ padding: 0 }}>
+                  <div className="chat-typing"><span/><span/><span/></div>
+                </div>
+              </div>
+            )}
+            {error && <div className="chat-err"><IAlert size={13} /> {error}</div>}
+          </>
+        )}
+      </div>
+
+      {/* Composer */}
+      <div className="chat-composer-wrap">
+        <div className="chat-composer">
+          <textarea ref={taRef} rows={1} value={input}
+            placeholder={empty ? "Ask Zee anything about your plumbing…" : "Reply…"}
+            onChange={e => setInput(e.target.value)} onKeyDown={onKey} />
+          <button className="chat-send-btn" onClick={() => send()} disabled={busy || !input.trim()} aria-label="Send">
+            <IArrow size={17} />
+          </button>
+        </div>
+        <div className="chat-hint">
+          <span><kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> newline</span>
+          <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}><IShield size={11} /> Secure</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("chat-root")).render(<ZeeChat />);
+</script>
+
+<script>
+/* active nav */
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  document.querySelectorAll('[id]').forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) cur = s.id;
+  });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+}, { passive: true });
+
+/* idea form */
+const form  = document.getElementById('ideaForm');
+const sent  = document.getElementById('ideasSent');
+const KEY   = 'zeezoo.ideas.v2';
+function load() { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch(e){ return[]; } }
+function renderCount() {
+  const n = load().length;
+  sent.innerHTML = n ? `<b>${n}</b> idea${n===1?'':'s'} submitted from this device.` : '';
+}
+renderCount();
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const text  = document.getElementById('ideaText').value.trim();
+  const email = document.getElementById('ideaEmail').value.trim();
+  if (!text) return;
+  const ideas = load();
+  ideas.push({ text, email: email||null, at: new Date().toISOString() });
+  localStorage.setItem(KEY, JSON.stringify(ideas));
+  form.classList.add('submitted');
+  renderCount();
+  setTimeout(() => {
+    form.classList.remove('submitted');
+    document.getElementById('ideaText').value = '';
+    document.getElementById('ideaEmail').value = '';
+  }, 2400);
+});
+</script>
+</body>
+</html>
