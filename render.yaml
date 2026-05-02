@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: zeezoo
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: VAPI_PRIVATE_KEY
+        sync: false
+      - key: VAPI_ASSISTANT_ID
+        value: 11300a9b-a11b-4841-ba88-6e06b79658bf
+    routes:
+      - type: rewrite
+        source: /notes/*
+        destination: /notes/:splat

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Deal Hunter: A Pac-Man Game for Business Acquisition — zeezoo</title>
+<meta name="description" content="I built a Pac-Man-style game where the mechanic is finding and acquiring businesses. The goal: roam a grid, find deals, build your empire through passive income." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #F2F0F9;
+    --surface: #FFFFFF;
+    --ink: #0E0B1A;
+    --muted: #7A7490;
+    --purple: #5B4FCF;
+    --orange: #E8440A;
+    --rule: rgba(91,79,207,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(91,79,207,0.3); transition: border-color 0.2s; }
+  a:hover { border-color: var(--purple); }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(242,240,249,0.88); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.1rem; font-weight: 400;
+    color: var(--ink);
+  }
+  .nav-back {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+    border: none; background: none; cursor: pointer;
+  }
+
+  article {
+    max-width: 680px; margin: 0 auto;
+    padding: 64px 28px 96px;
+  }
+  .post-kicker {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--purple);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 22px;
+  }
+  .post-kicker::before { content:''; width:24px; height:1.5px; background:var(--purple); }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .post-meta {
+    font-size: 12px; color: var(--muted);
+    letter-spacing: 0.06em; margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: 1.7rem; line-height: 1.25;
+    margin: 44px 0 14px; letter-spacing: -0.01em;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400;
+    font-size: 1.2rem; margin: 32px 0 12px;
+  }
+  p { margin-bottom: 16px; }
+  ul, ol { margin-left: 22px; margin-bottom: 22px; }
+  li { margin-bottom: 10px; }
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+  code {
+    background: rgba(91,79,207,0.08); padding: 2px 6px;
+    border-radius: 4px; font-family: 'Monaco', monospace; font-size: 0.9em;
+  }
+  .stat-box {
+    background: rgba(91,79,207,0.08); border-left: 4px solid var(--purple);
+    padding: 20px; margin: 28px 0; border-radius: 4px;
+  }
+  .stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--muted); }
+  .stat-value { font-size: 2rem; font-weight: 700; color: var(--ink); margin-top: 8px; }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">zeezoo</div>
+    <button class="nav-back" onclick="history.back()">← Back</button>
+  </nav>
+
+  <article>
+    <div class="post-kicker">Projects</div>
+    <h1>Deal Hunter</h1>
+    <p class="post-meta">A Pac-Man game for business acquisition · April 2026</p>
+
+    <p>I built a game where the mechanic is finding and acquiring small businesses. You move around a grid, land on business opportunities, and decide whether to invest based on valuation, ROI, and risk. The goal is to build a portfolio of profitable businesses.</p>
+
+    <h2>The Core Loop</h2>
+    <p>Movement is pure Pac-Man—WASD or arrow keys across a 20×15 grid. Businesses spawn randomly with stats:</p>
+    <ul>
+      <li><strong>Valuation:</strong> The cost to acquire (ranges $50K–$2M)</li>
+      <li><strong>Annual ROI:</strong> The return percentage (scaled by risk)</li>
+      <li><strong>Risk Level:</strong> Low (green), medium (amber), or high (red)</li>
+    </ul>
+    <p>You start with $1M capital. Step onto a business, a card pops up showing the deal, and you click "Acquire" if you can afford it. Each business you own generates <em>passive annual income</em>—that's your multiplier for buying more businesses.</p>
+
+    <h2>Why This Matters</h2>
+    <p>Most business acquisition advice is static: spreadsheets, case studies, analysis frameworks. But I wanted something interactive and playable—a tool that makes the <em>feel</em> of portfolio building visceral. How does capital constrain you? When do high-risk deals make sense? What does compounding your income actually feel like?</p>
+    <p>Deal Hunter answers those by putting you in the game. You experience the tradeoff between buying expensive, stable businesses vs. riskier, cheaper ones. You feel the friction of capital limits and the rush of generating enough income to unlock the next tier of deals.</p>
+
+    <h2>Technical Approach</h2>
+    <p>Built with React + Canvas for smooth grid rendering. The game state tracks:</p>
+    <ul>
+      <li>Player position and movement</li>
+      <li>Business spawn logic (no overlaps)</li>
+      <li>Portfolio capital and owned businesses</li>
+      <li>Real-time net worth and annual income calculations</li>
+    </ul>
+    <p>The UI makes the money flow obvious: show annual income <em>per business</em>, compare cost vs. your current cash, and highlight how much more you need if you can't afford a deal yet.</p>
+
+    <div class="stat-box">
+      <div class="stat-label">MVP Size</div>
+      <div class="stat-value">197 KB</div>
+    </div>
+
+    <h2>What's Next</h2>
+    <p>The MVP is playable. Future iterations could add:</p>
+    <ul>
+      <li>Market conditions that affect business valuations</li>
+      <li>Time mechanics (quarterly or annual income payouts)</li>
+      <li>Competitors trying to steal deals</li>
+      <li>Debt/leverage to buy more aggressively</li>
+      <li>Portfolio milestones and end-game conditions</li>
+    </ul>
+    <p>But for now, the core loop works: hunt, acquire, earn, repeat. The game is ready to playtest and iterate on.</p>
+
+  </article>
+</body>
+</html>

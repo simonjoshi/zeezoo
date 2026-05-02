@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Notes — zeezoo</title>
+<meta name="description" content="Business analysis, market research, acquisition case studies. Real deals, real framework, real thinking." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #F2F0F9;
+    --surface: #FFFFFF;
+    --ink: #0E0B1A;
+    --muted: #7A7490;
+    --purple: #5B4FCF;
+    --orange: #E8440A;
+    --rule: rgba(91,79,207,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(91,79,207,0.3); transition: border-color 0.2s; }
+  a:hover { border-color: var(--purple); }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(242,240,249,0.88); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px; flex-wrap: wrap;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.1rem; font-weight: 400;
+    color: var(--ink);
+  }
+  .nav-back {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+    border: none;
+  }
+
+  .container {
+    max-width: 1000px; margin: 0 auto;
+    padding: 72px 28px 96px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+
+  .page-intro {
+    font-size: 1.02rem; color: var(--muted);
+    max-width: 65ch; line-height: 1.8;
+    margin-bottom: 52px;
+  }
+
+  .notes-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 44px;
+  }
+
+  .note-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 14px; padding: 28px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+  }
+
+  .note-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(91,79,207,0.15);
+    border-color: rgba(91,79,207,0.25);
+  }
+
+  .note-kicker {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--purple);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .note-kicker::before { content:''; width:16px; height:1.5px; background:var(--purple); }
+
+  .note-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 700;
+    font-size: 1.45rem; line-height: 1.25;
+    margin-bottom: 12px; color: var(--ink);
+  }
+
+  .note-meta {
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.05em; margin-bottom: 14px;
+  }
+
+  .note-desc {
+    font-size: 0.95rem; color: #2A2335;
+    line-height: 1.6; margin-bottom: 18px; flex-grow: 1;
+  }
+
+  .note-link {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--purple); border-bottom: 1px solid rgba(91,79,207,0.3);
+    margin-top: auto; padding-top: 12px;
+  }
+
+  .note-card:hover .note-link {
+    border-bottom-color: var(--purple);
+  }
+
+  @media (max-width: 780px) {
+    nav {
+      padding: 12px 16px;
+      height: auto;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .nav-brand {
+      flex-basis: 100%;
+      padding: 0;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .nav-back {
+      font-size: 9px;
+      padding: 0;
+    }
+    .container { padding: 44px 16px 72px; }
+    .notes-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand" style="border:none;">ZeeZoo</a>
+  <a href="/" class="nav-back" style="border:none;">← Home</a>
+</nav>
+
+<div class="container">
+  <h1>Notes</h1>
+  <p class="page-intro">
+    Deep dives on business acquisitions, market analysis, and real-world decision frameworks. Each note documents a deal, a market analysis, or a thinking pattern I've applied through my Conductor framework.
+  </p>
+
+  <div class="notes-grid">
+    <!-- Note 001 -->
+    <a href="why-im-looking-at-a-22m-boba-shop.html" class="note-card">
+      <div class="note-kicker">Note 001 · The Deal</div>
+      <h2 class="note-title">Why I'm looking at a $2.2M boba shop.</h2>
+      <p class="note-meta">April 2026 · 6 min read</p>
+      <p class="note-desc">I started evaluating a boba tea + sandwich cafe in Arvada, Colorado. Here's what caught my attention and what Zeezoo flagged as red flags in week one.</p>
+      <span class="note-link">Read Note →</span>
+    </a>
+
+    <!-- Note 002 -->
+    <a href="small-business-loan-guide-2026.html" class="note-card">
+      <div class="note-kicker">Note 002 · Funding</div>
+      <h2 class="note-title">How to actually finance a food service acquisition.</h2>
+      <p class="note-meta">April 2026 · 12 min read · Conductor Framework</p>
+      <p class="note-desc">SBA 7(a) loans, seller financing, the July 2025 rule change that matters, and what actually works for boba shop acquisitions. Funded by research + debate + accuracy verification.</p>
+      <span class="note-link">Read Note →</span>
+    </a>
+
+    <!-- Note 003 -->
+    <a href="colorado-springs-laundromat-analysis.html" class="note-card">
+      <div class="note-kicker">Note 003 · Deal Analysis</div>
+      <h2 class="note-title">Why that $369k laundromat is overpriced.</h2>
+      <p class="note-meta">April 2026 · 10 min read · Conductor Framework</p>
+      <p class="note-desc">A Colorado Springs coin laundry looks safe but the numbers don't work. The $49k SDE is impossible math, the landlord will squeeze you at renewal, and SBA underwriters already rejected this deal.</p>
+      <span class="note-link">Read Note →</span>
+    </a>
+
+    <!-- Note 004 -->
+    <a href="conductor-denver-plumbing-analysis.html" class="note-card">
+      <div class="note-kicker">Note 004 · Market Analysis</div>
+      <h2 class="note-title">Should you buy a plumbing business in Denver?</h2>
+      <p class="note-meta">April 2026 · 10 min read · Conductor Framework</p>
+      <p class="note-desc">Full market analysis using the Conductor framework: Research, Competitor, Debate, and Accuracy agents. Verdict: 🟡 CONDITIONAL PROCEED with 5 specific conditions.</p>
+      <span class="note-link">Read Note →</span>
+    </a>
+
+    <!-- Note 005 -->
+    <a href="business-model-comparison.html" class="note-card">
+      <div class="note-kicker">Note 005 · Business Analysis</div>
+      <h2 class="note-title">Which small business is actually better?</h2>
+      <p class="note-meta">April 2026 · Laundromat vs. Car Wash vs. Boba Shop</p>
+      <p class="note-desc">Comparative analysis of three acquisition models using public SBA data. Visual breakdowns of capital, cash flow, survival rates, owner hours, margins, and growth. Verdict: 🥇 Laundromat wins for passive income.</p>
+      <span class="note-link">Read Note →</span>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
