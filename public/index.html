@@ -221,6 +221,31 @@
     color: rgba(65,200,120,0.7); position: relative; z-index: 1;
   }
 
+  /* Fillmore Construction: warm clay site */
+  .img-construction {
+    background: linear-gradient(160deg, #1e1208 0%, #2e1c0e 50%, #3a2410 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .img-construction::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, rgba(181,71,31,0.22) 0%, transparent 60%);
+  }
+  .img-construction::after {
+    content: '🏗️';
+    font-size: 68px; position: relative; z-index: 1;
+    filter: drop-shadow(0 4px 20px rgba(181,71,31,0.5));
+  }
+  .construction-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(212,140,80,0.8); position: relative; z-index: 1;
+  }
+  .app-tag.tag-site {
+    background: rgba(181,71,31,0.1);
+    color: #8e3416; border-color: rgba(181,71,31,0.25);
+  }
+
   /* card text body — LIGHT */
   .app-body {
     padding: 20px 22px 24px;
@@ -745,6 +770,18 @@
           <div class="app-name">ZeeZoo-Biz</div>
           <p class="app-desc">Search real businesses for sale across BizBuySell, LoopNet, and more. Live marketplace data, one clean interface.</p>
           <span class="app-cta">Find a business</span>
+        </div>
+      </a>
+
+      <a class="app-card" href="https://fillmore-construction.onrender.com" target="_blank" rel="noopener">
+        <div class="app-img img-construction">
+          <span class="construction-label">Fillmore Construction</span>
+        </div>
+        <div class="app-body">
+          <span class="app-tag tag-site">Website</span>
+          <div class="app-name">Fillmore Construction</div>
+          <p class="app-desc">A full contractor site for a Murphys, CA family business — voice assistant, estimate form, gallery, and community story. Built from a Claude Design handoff.</p>
+          <span class="app-cta">View the site</span>
         </div>
       </a>
 
